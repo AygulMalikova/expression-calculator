@@ -8,11 +8,15 @@ public class ExpressionCalculator {
     private static final char EOF = (char) -1;
 
     public static void main(String[] args) throws IOException {
-        InputStream file = ExpressionCalculator.class.getClassLoader().getResourceAsStream("test2.txt");
+        InputStream file = ExpressionCalculator.class.getClassLoader().getResourceAsStream("test4.txt");
 
         Parser parser = new Parser(file);
         Expression parsedExpr = parser.parse();
-        System.out.println(parsedExpr.calculate());
-
+        if (parsedExpr == null) {
+            System.out.println("Wrong input");
+        }
+        else {
+            System.out.println(String.valueOf(parsedExpr.calculate()));
+        }
     }
 }

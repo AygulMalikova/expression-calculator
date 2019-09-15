@@ -26,10 +26,16 @@ public class Parser {
         if ((op = readSymbol()) != null) {
             this.current = op;
         }
+        else {
+            return null;
+        }
         return parseRelation();
     }
     private Expression parseRelation() throws IOException {
         Expression result = parseTerm();
+        if (result == null) {
+            return null;
+        }
         while ( !endOdFile ) {
             Character temp = current;
             if (current == '<' || current == '>' || current == '=') {
@@ -39,6 +45,9 @@ public class Parser {
                 }
                 current = op;
                 Expression right = parseTerm();
+                if (right == null) {
+                    return result;
+                }
                 if (temp == '<')
                     result = new Less(result,right);
                 else if (temp == '>')
@@ -54,6 +63,9 @@ public class Parser {
 
     private Expression parseTerm() throws IOException {
         Expression result = parseFactor();
+        if (result == null) {
+            return null;
+        }
         while ( !endOdFile ) {
             Character temp = current;
             if (current == '-' || current == '+') {
@@ -63,6 +75,9 @@ public class Parser {
                 }
                 current = op;
                 Expression right = parseFactor();
+                if (right == null) {
+                    return result;
+                }
                 if (temp == '-')
                     result = new Minus(result,right);
                 else
@@ -76,6 +91,9 @@ public class Parser {
 
     private Expression parseFactor() throws IOException {
         Expression result = parsePrimary();
+        if (result == null) {
+            return null;
+        }
 
         while ( !endOdFile ) {
             if (current == '*') {
@@ -85,6 +103,9 @@ public class Parser {
                 }
                 current = op;
                 Expression right = parsePrimary();
+                if (right == null) {
+                    return result;
+                }
                 result = new Multiplication(result,right);
             }
             else
